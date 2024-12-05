@@ -9,7 +9,7 @@ from tqdm import tqdm  # Import tqdm
 import json
 
 class TextToSQLTrainer:
-    def __init__(self, model_path, train_data_path, val_data_path, tables_data_path, num_train_rows, num_val_rows):
+    def __init__(self, model_path, train_data_path, val_data_path, tables_data_path, num_train_rows='all', num_val_rows='all'):
         self.model_path = model_path
         self.train_data_path = train_data_path
         self.val_data_path = val_data_path
@@ -127,8 +127,12 @@ class TextToSQLTrainer:
             self.model = torch.nn.DataParallel(self.model)
 
         # Load the dataset
-        train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data[:20])
-        val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data[:20])
+        #train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data[:20])
+        #val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data[:20])
+
+        train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data)
+        val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data)
+
 
         # Create data loaders
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True, prefetch_factor=2)
