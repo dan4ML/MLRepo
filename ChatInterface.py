@@ -46,7 +46,6 @@ class ChatBotApp:
         # dbTransObj.save_feedback(feedback_value)
         return jsonify({'status': 'success', 'feedback': feedback_value})
 
-    #def generate_and_emit_response(self, model, tokenizer, message_with_prefix, model_name, response='null', execType='null'):
     def generate_and_emit_response(self, model, tokenizer, model_name, response='null', execType='null'):
         dateStrStart = datetime.now().strftime('%Y%m%dT%H%M%S')
         start_time = time.time()
@@ -103,10 +102,7 @@ class ChatBotApp:
             message = f"question: {message}"
             execType = "txttosql"
 
-        # Start background tasks to generate and emit responses independently
-        #self.socketio.start_background_task(self.generate_and_emit_response, self.model1, self.tokenizer1, message_with_prefix, self.model_name1, message, execType)
-        #self.socketio.start_background_task(self.generate_and_emit_response, self.model2, self.tokenizer2, message_with_prefix, self.model_name2, message, execType)
-        
+        # Start background tasks to generate and emit responses independently 
         self.socketio.start_background_task(self.generate_and_emit_response, self.model1, self.tokenizer1, self.model_name1, message, execType)
         self.socketio.start_background_task(self.generate_and_emit_response, self.model2, self.tokenizer2, self.model_name2, message, execType)
 
