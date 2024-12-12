@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Tahoma', Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #004d00;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container adjusted to provide 10px gap between sidebar and chat-section */
+        .container {
+            display: flex;
+            width: 95%; /* Dynamic width */
+            height: 90vh;
+            margin: 0 auto; /* Center horizontally */
+            gap: 10px; /* Gap between sidebar and chat section */
+        }
+
+        /* Sidebar (15% of the page) with rounded borders and no right border */
+        .sidebar {
+            width: 15%;
+            background-color: rgba(0, 0, 0, 0.09); /* Slightly transparent */
+            padding: 20px;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            border: 1px solid #ddd; /* Thin border around the entire section */
+            border-radius: 10px; /* Rounded corners */
+            display: flex;
+            flex-direction: column;
+            color: #004d00; /* Dark green font color */
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #004d00; /* Dark green  */
+        }
+
+        .sidebar a {
+            color: #004d00; /* Dark green  */
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Chat section (85% of the page) with rounded borders */
+        .chat-section {
+            width: 85%;
+            background-color: rgba(0, 0, 0, 0.04); /* Light transparent background */
+            display: flex;
+            flex-direction: column;
+            padding: 10px; /* Add padding to ensure proper alignment */
+            border: 1px solid #ddd; /* Thin border */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        }
+
+        /* Ensure chat header and chat input inside the chat-section are rounded inside */
+        .chat-header, .chat-input-container {
+            border-radius: 10px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-radius: 15px; /* Ensure the chat messages area also has rounded corners */
+        }
+
+        .message-row {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            max-width: 80%;
+            border-radius: 15px;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: black;
+            color: white;
+            align-self: flex-start;
+            text-align: left;
+            border-bottom-left-radius: 0;
+        }
+
+        .bot-message {
+            background-color: white;
+            color: #333;
+            align-self: flex-start;
+            text-align: left;
+            border-bottom-left-radius: 0;
+            border: 1px solid #ddd;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background-color: white;
+            border-radius: 0 0 15px 15px; /* Rounded bottom edges for the input area */
+        }
+
+        .chat-input-container input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd; /* Default border color */
+            border-radius: 5px;
+            outline: none; /* Remove the default blue outline on focus */
+        }
+
+        /* Change the border color when the input is selected */
+        .chat-input-container input:focus {
+            border-color: #bbb; /* Slightly darker than the default border color */
+        }
+
+        .chat-input-container button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .chat-input-container button:disabled {
+            background-color: #ccc;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+                height: 80vh;
+                border-radius: 15px; /* Ensure mobile view retains rounded edges */
+            }
+
+            .sidebar {
+                width: 100%;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+                border-radius: 15px 15px 0 0; /* Rounded top corners */
+            }
+
+            .chat-section {
+                width: 100%;
+                border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+            }
+
+            .message-bubble {
+                max-width: 100%;
+            }
+        }
+
+        /* Code generated by MCHP Chatbot */
+        .thumbs {
+            float: right;
+            margin-left: 10px;
+        }
+
+        .thumbs i {
+            cursor: pointer;
+            margin-left: 5px;
+            color: black; /* Initial color */
+            border: 1px solid black; /* Outline with black */
+            border-radius: 50%; /* Make the outline circular */
+            padding: 5px; /* Add padding to make the outline visible */
+        }
+
+        .thumbs i.selected-up {
+            color: green; /* Green when thumbs up is selected */
+            border-color: green; /* Green outline when selected */
+        }
+
+        .thumbs i.selected-down {
+            color: red; /* Red when thumbs down is selected */
+            border-color: red; /* Red outline when selected */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar (left, 15% of the page) -->
+        <div class="sidebar">
+            <h2><i>History</i></h2>
+            <a href="#">Last 7 Days</a>
+            <a href="#">Last 30 Days</a>
+        </div>
+
+        <!-- Chat Section (right, 85% of the page) -->
+        <div class="chat-section">
+            <!-- Header with title -->
+            <div class="chat-header">
+                <h1>T3 ChatBot</h1>
+            </div>
+
+            <!-- Chat messages area -->
+            <div class="chat-messages" id="chat-messages"></div>
+
+            <!-- Chat input -->
+            <div class="chat-input-container">
+                <input type="text" id="user-input" placeholder="Ask ChatBot..." autofocus>
+                <button id="send-btn" disabled><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const inputField = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-btn');
+        const messagesContainer = document.getElementById('chat-messages');
+
+        const messageHistory = [];
+        let historyIndex = -1; // To track the current position in the history
+
+        inputField.addEventListener('input', () => {
+            sendButton.disabled = inputField.value.trim() === '';
+        });
+
+        // Handle keydown for arrow navigation
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp') {
+                // Navigate up in history
+                if (historyIndex < messageHistory.length - 1) {
+                    historyIndex++;
+                    inputField.value = messageHistory[messageHistory.length - 1 - historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                // Navigate down in history
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    inputField.value = messageHistory[messageHistory.length - 1 - historyIndex];
+                } else if (historyIndex === 0) {
+                    historyIndex--;
+                    inputField.value = ''; // Clear the input if at the top
+                }
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+        inputField.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !sendButton.disabled) {
+                sendMessage();
+            }
+        });
+
+        // Updated sendMessage function to add message to history
+        function sendMessage() {
+            const message = inputField.value.trim();
+            if (message) {
+                appendMessage(message, 'user-message');
+                socket.emit('user_message', message);
+                inputField.value = '';
+                sendButton.disabled = true;
+
+                // Add message to history
+                messageHistory.push(message);
+                historyIndex = 0; // Reset index after sending a new message
+            }
+        }
+
+        socket.on('bot_response', function(data) {
+            const modelLabel = data.model;
+            const response = data.response;
+            const response_time = data.response_time;
+            appendMessage(`${modelLabel}: ${response}: ${response_time}`, 'bot-message');
+        });
+
+        function appendMessage(message, className) {
+            const messageRow = document.createElement('div');
+            messageRow.className = 'message-row';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-bubble ${className}`;
+            messageDiv.innerHTML = `
+                <span class="message-text">${message}</span>
+                ${className === 'bot-message' ? `
+                <span class="thumbs">
+                    <i class="fas fa-thumbs-up" onclick="setFeedback(this, 1)"></i>
+                    <i class="fas fa-thumbs-down" onclick="setFeedback(this, 0)"></i>
+                </span>` : ''}
+            `;
+
+            messageRow.appendChild(messageDiv);
+            messagesContainer.appendChild(messageRow);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+     
+        function setFeedback(element, value) {
+            console.log('Feedback:', value);
+            // Highlight the selected icon
+            const thumbs = element.parentElement.querySelectorAll('i');
+            const isSelected = element.classList.contains(value === 1 ? 'selected-up' : 'selected-down');
+
+            thumbs.forEach(thumb => {
+                thumb.classList.remove('selected-up', 'selected-down');
+            });
+
+            if (!isSelected) {
+                if (value === 1) {
+                    element.classList.add('selected-up');
+                } else {
+                    element.classList.add('selected-down');
+                }
+            }
+
+            // Send feedback to the server
+            fetch('/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ feedback: isSelected ? null : value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Feedback saved:', data);
+            })
+            .catch(error => {
+                console.error('Error saving feedback:', error);
+            });
+        }
+    </script>
+</body>
+</html>
