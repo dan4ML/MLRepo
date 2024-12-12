@@ -88,11 +88,11 @@ class TextToSQLProfiler:
 
 if __name__ == "__main__":
     # Define paths to the model and dataset
-    model_path = "C:/ML/Capstone/LLM_Interface/GoogleT5/T5-3B-finetuned/"
+    model_path = "path/to/T5-3B-finetuned/"
 
-    data_path = "C:/ML/Capstone/LLM_Interface/Datasets/Spider/spider/evaluation_examples/examples/train_spider.json"
+    data_path = "path/to/train_spider.json"
 
-    log_dir = "C:/ML/Capstone/LLM_Interface/GoogleT5/T5-3B-finetuned_log/"
+    log_dir = "pat/to/T5-3B-finetuned_log/"
 
     numOfRows = 30
 
