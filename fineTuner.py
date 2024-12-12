@@ -9,7 +9,7 @@ from tqdm import tqdm  # Import tqdm
 import json
 
 class TextToSQLTrainer:
-    def __init__(self, model_path, train_data_path, val_data_path, tables_data_path, num_train_rows='all', num_val_rows='all'):
+    def __init__(self, model_path, train_data_path, val_data_path, tables_data_path, num_train_rows, num_val_rows):
         self.model_path = model_path
         self.train_data_path = train_data_path
         self.val_data_path = val_data_path
@@ -127,12 +127,8 @@ class TextToSQLTrainer:
             self.model = torch.nn.DataParallel(self.model)
 
         # Load the dataset
-        #train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data[:20])
-        #val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data[:20])
-
-        train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data)
-        val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data)
-
+        train_dataset = self.TextToSQLDataset(self.tokenizer, self.train_data[:20])
+        val_dataset = self.TextToSQLDataset(self.tokenizer, self.val_data[:20])
 
         # Create data loaders
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True, prefetch_factor=2)
@@ -230,22 +226,22 @@ if __name__ == "__main__":
 
     # Define the model path
     # Windows
-    model_path = 'add/your/path'
+    model_path = 'windows/path/to/model/T5-3B'
     
     # Linux
-    #model_path = 'add/your/path'
+    #model_path = 'linux/path/to/model/T5-3B'
 
     
     # Define the data paths
     #Windows
-    train_data_path = 'add/your/path/train_spider.json'
-    val_data_path = 'add/your/path/dev.json'
-    tables_data_path = 'add/your/path/tables.json'
+    train_data_path = 'windows/path/to/train_spider.json'
+    val_data_path = 'windows/path/to//dev.json'
+    tables_data_path = 'windows/path/to/tables.json'
 
     # Linux
-    #train_data_path = 'add/your/path/train_spider.json'
-    #val_data_path = 'add/your/path/dev.json'
-    #tables_data_path = 'add/your/path/tables.json'
+    #train_data_path = 'linux/path/to/train_spider.json'
+    #val_data_path = 'linux/path/to/dev.json'
+    #tables_data_path = 'linux/path/to/tables.json'
     
     # Specify the number of rows to load. Use 'all' to load all the dataset.
     num_train_rows = '10'
@@ -259,10 +255,10 @@ if __name__ == "__main__":
 
     # Save the fine-tuned model
     # Windows
-    output_dir = 'add/your/path/T5-3B-finetunedSchema'
+    output_dir = "windows/path/to/T5-3B-finetuned"
     
     # Linux
-    #output_dir = 'add/your/path/T5-3B-finetunedSchema'
+    #output_dir = "linux/path/to/T5-3B-finetuned"
    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
