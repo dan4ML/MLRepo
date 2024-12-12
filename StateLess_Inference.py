@@ -4,7 +4,7 @@ import torch
 from datetime import datetime
 
 # Define the model path
-model_path1 = 'C:/ML/Capstone/LLM_Interface/GoogleT5/T5-3B-finetuned'
+model_path1 = 'path/to/T5-3B-finetuned'
 
 # Load the tokenizer and model
 tokenizer1 = T5Tokenizer.from_pretrained(model_path1)
